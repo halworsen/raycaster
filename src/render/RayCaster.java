@@ -7,42 +7,43 @@ import maths.Ray;
 import maths.Vector3D;
 import maths.GeoShape;
 
+import render.Scene;
+import render.Light;
+
 public class RayCaster {
 	// Camera to cast from
 	Camera cam;
-	// Interseciton points that have this distance or greater from the camera are colored full black
-	int greatestDist;
 	
 	// How many pixels to compute in the X direction
 	int pixelsX;
 	// How many pixels to compute in the Y direction
 	int pixelsY;
 	
-	public RayCaster(Camera cam, int greatestDist, int pixelsX, int pixelsY) {
-		super();
+	public RayCaster(Camera cam, int pixelsX, int pixelsY) {
 		this.cam = cam;
-		this.greatestDist = greatestDist;
 		this.pixelsX = pixelsX;
 		this.pixelsY = pixelsY;
 	}
 	
-	public int[][] getColors(GeoShape renderObject) {
+	// Renders the given scene
+	public int[][] getColors(Scene scene) {
 		int colorArray[][] = new int[this.pixelsX][this.pixelsY];
+		
+		// no lights, nothing's gonna be visible anyways
+		if(scene.getLightCount() == 0) {
+			return colorArray;
+		}
+		
+		double[][] distances = new double[this.pixelsX][this.pixelsY];
 		
 		double angleStepHorizontal = (double)this.cam.getHFOV() / (double)this.pixelsX;
 		double angleStepVertical = (double)this.cam.getVFOV() / (double)this.pixelsY;
 	
 		Matrix transform = this.cam.getTransform().inverse();
 		
-		// find the place the camera is pointing directly at first
-		Ray camRay = new Ray(cam.getOrigin(), cam.getDir());
-		Vector3D camIntersect = renderObject.getIntersection(camRay);
-		
-		if(camIntersect == null) {
-			// default to considering the length to the camera
-			camIntersect = cam.getOrigin();
-		}
-		
+		// Cast a ray for each pixel. For each ray, compute its intersection with all scene objects
+		// We compute colors on the closest intersection points
+
 		for(int y = 0; y < this.pixelsY; y++) {
 			double angV = Math.toRadians(-cam.getVFOV()/2 + (angleStepVertical * y));
 			
@@ -61,25 +62,35 @@ public class RayCaster {
 				renderDir = new Vector3D(renderDir.mul(rotationMatrix));
 				
 				Ray ray = new Ray(cam.getOrigin(), (Vector3D)renderDir);
-				Vector3D intersect = renderObject.getIntersection(ray);
-				
-				if(intersect == null) {
-					c = new Color(0, 0, 0);
-				}else {
-					Vector3D toIntersect = new Vector3D(intersect.sub(camIntersect));
+
+				for(GeoShape renderObject : scene.getShapes()) {
+
+					Vector3D intersect = renderObject.getIntersection(ray);
 					
-					float color = (float)(1 - Math.min(toIntersect.length(), greatestDist) / greatestDist);
-					c = new Color(color, color, color);
+					if(intersect == null) {
+						continue;
+					}
+					
+					double distToCam = intersect.sub(this.cam.getOrigin()).length();
+					
+					// Only render the shapes closest to the camera
+					if((distToCam < distances[x][y]) || (distances[x][y] == 0)) {
+						distances[x][y] = distToCam;
+
+						float totalLight = 0;
+						// Compute color for the point
+						for(Light lightSrc : scene.getLights()) {
+							totalLight += (float)lightSrc.computeColorIntensity(intersect);
+						}
+						
+						c = new Color(totalLight, totalLight, totalLight);
+						colorArray[x][y] = c.getRGB();
+					}
+
 				}
-				
-				if(angV == 0 && angH == 0) {
-					c = new Color(1, 0, 0);
-				}
-				
-				colorArray[x][y] = c.getRGB();
 			}
 		}
-		
+			
 		return colorArray;
 	}
 	

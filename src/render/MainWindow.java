@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.event.KeyListener;
 
 import maths.Vector3D;
 import maths.Plane;
@@ -15,6 +14,8 @@ import maths.Sphere;
 
 import render.Camera;
 import render.CameraControl;
+import render.Scene;
+import render.Light;
 
 public class MainWindow extends JPanel {
 	
@@ -27,7 +28,7 @@ public class MainWindow extends JPanel {
 		this.canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		this.cam = new Camera(camPos, 60, 60);
 		
-		this.renderer = new RayCaster(this.cam, 1, width, height);
+		this.renderer = new RayCaster(this.cam, width, height);
 	}
 	
 	public Camera getCamera() {
@@ -56,11 +57,19 @@ public class MainWindow extends JPanel {
 		}
 		painting = true;
 		
-		// draw geometry
+		// geometry to draw
 		Plane plane = new Plane(new Vector3D(1, 0, 0), new Vector3D(0,0,0));
 		Sphere sphere = new Sphere(new Vector3D(0, 0, 0), 1);
 		
-		int[][] colors = renderer.getColors(sphere);
+		// light sources
+		Light lightSrc = new Light(new Vector3D(-1.5, 1.5, 2), 3, 1.5);
+		
+		Scene renderScene = new Scene();
+		renderScene.addGeoShape(plane);
+		renderScene.addGeoShape(sphere);
+		renderScene.addLight(lightSrc);
+		
+		int[][] colors = renderer.getColors(renderScene);
 		
 		for(int y = 0; y < canvas.getHeight(); y++) {
 			for(int x = 0; x < canvas.getWidth(); x++) {
@@ -86,14 +95,14 @@ public class MainWindow extends JPanel {
 	public static void main(String[] args) {
 		JFrame window = new JFrame("thing drawer");
 
-		MainWindow drawer = new MainWindow(600, 600, new Vector3D(-10, 0, 0));
+		MainWindow drawer = new MainWindow(400, 400, new Vector3D(-10, 0, 0));
 		drawer.paint();
 		
 		window.addKeyListener(new CameraControl(drawer.getCamera(), drawer, window));
 		
 		window.add(drawer);
 		window.pack();
-		window.setSize(600, 600);
+		window.setSize(400, 400);
 		window.setVisible(true);
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
