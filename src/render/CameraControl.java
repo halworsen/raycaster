@@ -66,24 +66,24 @@ public class CameraControl implements KeyListener{
 		
 		// yaw left
 		if(keyCode == 37) {
-			this.cam.rotateAbsoluteZ(Math.PI/40);
+			this.cam.rotateZ(Math.PI/40);
 
 		}
 		
 		// yaw right
 		if(keyCode == 39) {
-			this.cam.rotateAbsoluteZ(-Math.PI/40);
+			this.cam.rotateZ(-Math.PI/40);
 
 		}
 
 		// pitch up
 		if(keyCode == 38) {
-			this.cam.rotateAbsoluteY(Math.PI/40);
+			this.cam.rotateY(Math.PI/40);
 		}
 		
 		// pitch down
 		if(keyCode == 40) {
-			this.cam.rotateAbsoluteY(-Math.PI/40);
+			this.cam.rotateY(-Math.PI/40);
 		}
 		
 		drawer.paint();

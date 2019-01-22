@@ -65,36 +65,11 @@ public class Camera {
 		this.translateAbsolute(translation);
 	}
 	
-	// Rotates the camera around the standard basis X axis
-	public void rotateAbsoluteX(double theta) {
-		Matrix rotationMatrix = Matrix.RotationMatrix3DX(theta);
-		rotationMatrix = rotationMatrix.mul(this.basisTransform);
-		
-		this.basisTransform = rotationMatrix;
-	}
-	
-	// Rotates the camera around the standard basis Y axis
-	public void rotateAbsoluteY(double theta) {
-		Matrix rotationMatrix = Matrix.RotationMatrix3DY(theta);
-		rotationMatrix = rotationMatrix.mul(this.basisTransform);
-		
-		this.basisTransform = rotationMatrix;
-	}
-	
-	// Rotates the camera around the standard basis Z axis
-	public void rotateAbsoluteZ(double theta) {
-		Matrix rotationMatrix = Matrix.RotationMatrix3DZ(theta);
-		rotationMatrix = rotationMatrix.mul(this.basisTransform);
-		
-		this.basisTransform = rotationMatrix;
-	}
-	
 	// Rotates the camera locally around the X axis
 	// performs the rotation in the normal XYZ coordinate system then transforms to the camera's basis
 	public void rotateX(double theta) {
 		Matrix rotationMatrix = Matrix.RotationMatrix3DX(theta);
-		// Rotate, then transform to the camera basis
-		rotationMatrix = rotationMatrix.mul(this.basisTransform.inverse());
+		rotationMatrix = this.basisTransform.mul(rotationMatrix);
 		
 		this.basisTransform = rotationMatrix;
 	}
@@ -102,16 +77,16 @@ public class Camera {
 	// Rotates the camera locally around the Y axis
 	public void rotateY(double theta) {
 		Matrix rotationMatrix = Matrix.RotationMatrix3DY(theta);
-		rotationMatrix = rotationMatrix.mul(this.basisTransform.inverse());
-
+		rotationMatrix = this.basisTransform.mul(rotationMatrix);
+		
 		this.basisTransform = rotationMatrix;
 	}
 	
 	// Rotates the camera locally around the Z axis
 	public void rotateZ(double theta) {
 		Matrix rotationMatrix = Matrix.RotationMatrix3DZ(theta);
-		rotationMatrix = rotationMatrix.mul(this.basisTransform.inverse());
-
+		rotationMatrix = this.basisTransform.mul(rotationMatrix);
+		
 		this.basisTransform = rotationMatrix;
 	}
 }
