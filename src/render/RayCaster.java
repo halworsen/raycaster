@@ -81,6 +81,7 @@ public class RayCaster {
 						for(Light lightSrc : scene.getLights()) {
 							totalLight += lightSrc.computeColorIntensity(intersect);
 						}
+						totalLight = (totalLight > 1 ? 1 : totalLight);
 						
 						c = Color.color(totalLight, totalLight, totalLight);
 						colorArray[x][y] = c;
