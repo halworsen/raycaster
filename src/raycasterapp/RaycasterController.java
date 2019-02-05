@@ -15,6 +15,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+
 import maths.Plane;
 import maths.Sphere;
 import maths.Vector3D;
@@ -143,8 +144,9 @@ public class RaycasterController {
 
     @FXML
     // -Y
+    // Note: Y controls are inverted
     void translateNYPress() {
-    	this.cam.translate(new Vector3D(0, -0.5, 0));
+    	this.cam.translate(new Vector3D(0, 0.5, 0));
     	
     	updateCanvas();
     }
@@ -168,7 +170,7 @@ public class RaycasterController {
     @FXML
     // +Y
     void translatePYPress() {
-    	this.cam.translate(new Vector3D(0, 0.5, 0));
+    	this.cam.translate(new Vector3D(0, -0.5, 0));
     	
     	updateCanvas();
     }
