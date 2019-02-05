@@ -9,6 +9,7 @@ public class RaycasterApp extends Application{
 	@Override
 	public void start(final Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Raycaster");
+		primaryStage.setResizable(false);
 		primaryStage.setScene(new Scene(FXMLLoader.load(RaycasterApp.class.getResource("RaycasterApp.fxml"))));
 		primaryStage.show();
 	}
