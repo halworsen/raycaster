@@ -11,4 +11,6 @@ module raycaster {
 	
 	exports maths;
 	exports render;
+
+	opens raycasterapp;
 }
