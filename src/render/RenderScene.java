@@ -5,12 +5,12 @@ import render.Light;
 
 import java.util.ArrayList;
 
-public class Scene {
+public class RenderScene {
 
 	private ArrayList<Light> lights;
 	private ArrayList<GeoShape> shapes;
 	
-	public Scene() {
+	public RenderScene() {
 		this.lights = new ArrayList<Light>();
 		this.shapes = new ArrayList<GeoShape>();
 	}

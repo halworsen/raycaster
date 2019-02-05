@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.RaycasterController">
+   <children>
+      <VBox>
+         <children>
+            <Canvas fx:id="renderCanvas" height="400.0" width="400.0" />
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-padding: 10; -fx-background-color: #EEEEEE;">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Camera controls" />
+                  <Separator prefWidth="200.0" />
+                  <HBox alignment="CENTER" style="-fx-spacing: 30;">
+                     <children>
+                        <VBox style="-fx-spacing: 5;">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Translation" />
+                              <HBox>
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="translatePX" mnemonicParsing="false" onAction="#translatePXPress" prefHeight="25.0" prefWidth="55.0" text="+X" />
+                                          <Button fx:id="translateNX" mnemonicParsing="false" onAction="#translateNXPress" prefHeight="25.0" prefWidth="55.0" text="-X" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="translatePY" mnemonicParsing="false" onAction="#translatePYPress" prefHeight="25.0" prefWidth="55.0" text="+Y" />
+                                          <Button fx:id="translateNY" mnemonicParsing="false" onAction="#translateNYPress" prefHeight="25.0" prefWidth="55.0" text="-Y" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="translatePZ" mnemonicParsing="false" onAction="#translatePZPress" prefHeight="25.0" prefWidth="55.0" text="+Z" />
+                                          <Button fx:id="translateNZ" mnemonicParsing="false" onAction="#translateNZPress" prefHeight="25.0" prefWidth="55.0" text="-Z" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox style="-fx-spacing: 5;">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rotation" />
+                              <HBox>
+                                 <children>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="rotatePY" mnemonicParsing="false" onAction="#rotatePYPress" prefHeight="25.0" prefWidth="55.0" text="+Yaw" />
+                                          <Button fx:id="rotateNY" mnemonicParsing="false" onAction="#rotateNYPress" prefHeight="25.0" prefWidth="55.0" text="-Yaw" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="rotatePP" mnemonicParsing="false" onAction="#rotatePPPress" prefHeight="25.0" prefWidth="55.0" text="+Pitch" />
+                                          <Button fx:id="rotateNP" mnemonicParsing="false" onAction="#rotateNPPress" prefHeight="25.0" prefWidth="55.0" text="-Pitch" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="rotatePR" mnemonicParsing="false" onAction="#rotatePRPress" prefHeight="25.0" prefWidth="55.0" text="+Roll" />
+                                          <Button fx:id="rotateNR" mnemonicParsing="false" onAction="#rotateNRPress" prefHeight="25.0" prefWidth="55.0" text="-Roll" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox prefHeight="530.0" prefWidth="300.0" style="-fx-padding: 10; -fx-spacing: 15; -fx-background-color: #EEEEEE;">
+         <children>
+            <VBox alignment="TOP_CENTER" style="-fx-spacing: 15;">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add light source" />
+                  <HBox spacing="20.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="78.0" prefWidth="125.0">
+                           <children>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" wrappingWidth="8.078125" />
+                                    <TextField id="addLightX" fx:id="addLightX" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" wrappingWidth="8.078125" />
+                                    <TextField id="addLightY" fx:id="addLightY" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z" wrappingWidth="8.078125" />
+                                    <TextField id="addLightZ" fx:id="addLightZ" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox prefHeight="78.0" prefWidth="125.0">
+                           <children>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Radius" wrappingWidth="50.078125" />
+                                    <TextField id="addLightX" fx:id="addLightRadius" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Intensity" wrappingWidth="50.078125" />
+                                    <TextField id="addLightX" fx:id="addLightIntensity" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button id="addLightButton" fx:id="addLightButton" alignment="CENTER" mnemonicParsing="false" onAction="#addLightPress" prefHeight="25.0" prefWidth="150.0" text="Add" />
+               </children>
+            </VBox>
+            <Separator prefWidth="200.0" />
+            <VBox alignment="TOP_CENTER" style="-fx-spacing: 15;">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add sphere" />
+                  <HBox spacing="20.0">
+                     <children>
+                        <VBox prefHeight="78.0" prefWidth="125.0">
+                           <children>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" wrappingWidth="8.078125" />
+                                    <TextField id="addSphereX" fx:id="addSphereX" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" wrappingWidth="8.078125" />
+                                    <TextField id="addSphereY" fx:id="addSphereY" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z" wrappingWidth="8.078125" />
+                                    <TextField id="addSphereZ" fx:id="addSphereZ" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox prefHeight="78.0" prefWidth="125.0">
+                           <children>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Radius" wrappingWidth="50.078125" />
+                                    <TextField id="addLightX" fx:id="addSphereRadius" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button id="addSphereButton" fx:id="addSphereButton" mnemonicParsing="false" onAction="#addSpherePress" prefHeight="25.0" prefWidth="150.0" text="Add" />
+               </children>
+            </VBox>
+            <Separator prefWidth="200.0" />
+            <VBox alignment="TOP_CENTER" style="-fx-spacing: 15;">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add plane" />
+                  <HBox spacing="20.0">
+                     <children>
+                        <VBox prefHeight="75.0" prefWidth="200.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Point">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" wrappingWidth="8.078125" />
+                                    <TextField id="addPlaneX" fx:id="addPlaneX" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" wrappingWidth="8.078125" />
+                                    <TextField id="addPlaneY" fx:id="addPlaneY" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z" wrappingWidth="8.078125" />
+                                    <TextField id="addPlaneZ" fx:id="addPlaneZ" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <VBox prefHeight="75.0" prefWidth="200.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Normal">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="X" wrappingWidth="8.078125" />
+                                    <TextField id="addPlaneX" fx:id="addPlaneNX" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Y" wrappingWidth="8.078125" />
+                                    <TextField id="addPlaneY" fx:id="addPlaneNY" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" style="-fx-spacing: 5;">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Z" wrappingWidth="8.078125" />
+                                    <TextField id="addPlaneZ" fx:id="addPlaneNZ" prefHeight="25.0" prefWidth="110.0" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button id="addPlaneButton" fx:id="addPlaneButton" mnemonicParsing="false" onAction="#addPlanePress" prefHeight="25.0" prefWidth="150.0" text="Add" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>

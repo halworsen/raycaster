@@ -1,23 +1,23 @@
 package render;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 
 import maths.Matrix;
 import maths.Ray;
 import maths.Vector3D;
 import maths.GeoShape;
 
-import render.Scene;
+import render.RenderScene;
 import render.Light;
 
 public class RayCaster {
 	// Camera to cast from
-	Camera cam;
+	private Camera cam;
 	
 	// How many pixels to compute in the X direction
-	int pixelsX;
+	private int pixelsX;
 	// How many pixels to compute in the Y direction
-	int pixelsY;
+	private int pixelsY;
 	
 	public RayCaster(Camera cam, int pixelsX, int pixelsY) {
 		this.cam = cam;
@@ -25,9 +25,8 @@ public class RayCaster {
 		this.pixelsY = pixelsY;
 	}
 	
-	// Renders the given scene
-	public int[][] getColors(Scene scene) {
-		int colorArray[][] = new int[this.pixelsX][this.pixelsY];
+	public Color[][] getColors(RenderScene scene) {
+		Color colorArray[][] = new Color[this.pixelsX][this.pixelsY];
 		
 		// no lights, nothing's gonna be visible anyways
 		if(scene.getLightCount() == 0) {
@@ -77,20 +76,20 @@ public class RayCaster {
 					if((distToCam < distances[x][y]) || (distances[x][y] == 0)) {
 						distances[x][y] = distToCam;
 
-						float totalLight = 0;
+						double totalLight = 0;
 						// Compute color for the point
 						for(Light lightSrc : scene.getLights()) {
-							totalLight += (float)lightSrc.computeColorIntensity(intersect);
+							totalLight += lightSrc.computeColorIntensity(intersect);
 						}
 						
-						c = new Color(totalLight, totalLight, totalLight);
-						colorArray[x][y] = c.getRGB();
+						c = Color.color(totalLight, totalLight, totalLight);
+						colorArray[x][y] = c;
 					}
 
 				}
 			}
 		}
-			
+		
 		return colorArray;
 	}
 	
