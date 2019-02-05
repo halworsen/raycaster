@@ -1,4 +1,4 @@
-package app;
+package raycasterapp;
 
 import java.net.URL;
 import java.util.ResourceBundle;
