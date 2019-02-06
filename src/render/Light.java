@@ -1,7 +1,9 @@
 package render;
 
 import maths.Vector3D;
-import java.awt.Color;
+import maths.GeoShape;
+import maths.Ray;
+import render.RenderScene;
 
 public class Light {
 
@@ -43,11 +45,29 @@ public class Light {
 		return Math.min((1 - (Math.min(distance, this.radius) / this.radius)) * this.intensity, 1);
 	}
 	
-	// Computes the pixel color of a point based on distance to the light source
-	// Doesn't care about occlusion
-	public Color computeColor(Vector3D point) {
-		float colorIntensity = (float)computeColorIntensity(point);
+	// Performs a ray trace back to the light source to determine if the point is being occluded by something else in the given scene
+	public double computeOccludedColorIntensity(RenderScene scene, GeoShape renderingShape, Vector3D point) {
+		// create a ray going from the light origin and through the point
+		Vector3D direction = new Vector3D(origin.sub(point));
+		Ray ray = new Ray(point, direction);
 		
-		return new Color(colorIntensity, colorIntensity, colorIntensity);
+		double intensity = computeColorIntensity(point);
+
+		// current issue: the ray intersects with points contained inside other objects, causing the intensity to decrease even though the light never even reaches said point
+		for(GeoShape shape : scene.getShapes()) {
+			// Don't try to find intersections with the object we're rendering
+			if(shape.equals(renderingShape)) {
+				continue;
+			}
+			
+			Vector3D intersect = shape.getIntersection(ray);
+			if(intersect == null) {
+				continue;
+			}
+			
+			intensity /= 1.5;
+		}
+		
+		return intensity;
 	}
 }

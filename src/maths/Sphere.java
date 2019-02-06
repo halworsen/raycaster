@@ -8,9 +8,12 @@ public class Sphere extends GeoShape {
 	private double radius;
 	
 	public Sphere(Vector3D origin, double radius) {
-		super();
 		this.origin = origin;
 		this.radius = radius;
+	}
+	
+	public boolean contains(Vector3D point) {
+		return (point.sub(origin).length() <= radius);
 	}
 	
 	public Vector3D getOrigin() {
@@ -39,5 +42,5 @@ public class Sphere extends GeoShape {
 		double toIntersect = Math.sqrt(Math.pow(radius, 2) - Math.pow(distToRay, 2));
 		
 		return ray.getParametricPoint(projectionLength - toIntersect);
- 	}
+	}
 }

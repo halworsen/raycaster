@@ -8,4 +8,9 @@ public class GeoShape {
 	public Vector3D getIntersection(Ray ray) {
 		return null;
 	}
+	
+	// This should return whether or not the shape contains the given point
+	public boolean contains(Vector3D point) {
+		return false;
+	}
 }

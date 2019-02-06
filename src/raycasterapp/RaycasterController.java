@@ -358,18 +358,20 @@ public class RaycasterController {
     // Sets up the rendering scene, camera and renderer
     private void initCanvas() {
 		this.renderScene = new RenderScene();
-		/*
+		
 		Vector3D nullVec = new Vector3D();
 		// add some objects to the scene
 		renderScene.addGeoShape(new Sphere(nullVec, 1));
+		renderScene.addGeoShape(new Sphere(new Vector3D(0, 1, 0.7), 1));
 		renderScene.addGeoShape(new Plane(new Vector3D(1,0,0), nullVec));
 		// add a light
-		renderScene.addLight(new Light(new Vector3D(-1.5, 1.5, 2), 3, 1.5));
-		*/
+		renderScene.addLight(new Light(new Vector3D(-2, 1, 0.7), 3, 1.5));
 		
-		this.cam = new Camera(new Vector3D(-10, 0, 0), 60, 60);
+		
+		this.cam = new Camera(new Vector3D(-2, 1, 0.7), 60, 60);
 		
 		this.renderer = new RayCaster(cam, canvasWidth, canvasHeight);
+		//this.renderer.enableLightOcclusion(false);
 		
 		updateCanvas();
     }

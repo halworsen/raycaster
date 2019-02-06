@@ -19,10 +19,19 @@ public class RayCaster {
 	// How many pixels to compute in the Y direction
 	private int pixelsY;
 	
+	// Whether or not to compute light occlusion
+	private boolean lightOcclusion;
+	
 	public RayCaster(Camera cam, int pixelsX, int pixelsY) {
 		this.cam = cam;
 		this.pixelsX = pixelsX;
 		this.pixelsY = pixelsY;
+		
+		this.lightOcclusion = true;
+	}
+	
+	public void enableLightOcclusion(boolean enable) {
+		this.lightOcclusion = enable;
 	}
 	
 	public Color[][] getColors(RenderScene scene) {
@@ -72,14 +81,18 @@ public class RayCaster {
 					
 					double distToCam = intersect.sub(this.cam.getOrigin()).length();
 					
-					// Only render the shapes closest to the camera
+					// Only render the shapes closest to the camera (occlusion culling)
 					if((distToCam < distances[x][y]) || (distances[x][y] == 0)) {
 						distances[x][y] = distToCam;
 
 						double totalLight = 0;
 						// Compute color for the point
 						for(Light lightSrc : scene.getLights()) {
-							totalLight += lightSrc.computeColorIntensity(intersect);
+							if(this.lightOcclusion) {
+								totalLight += lightSrc.computeOccludedColorIntensity(scene, renderObject, intersect);
+							}else {
+								totalLight += lightSrc.computeColorIntensity(intersect);
+							}
 						}
 						totalLight = (totalLight > 1 ? 1 : totalLight);
 						

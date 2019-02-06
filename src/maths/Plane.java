@@ -11,30 +11,12 @@ public class Plane extends GeoShape {
 	}
 	
 	public boolean contains(Vector3D point) {
-		return (normal.dot(point) == 0);
+		return (refPoint.add(normal).dot(point) == 0);
 	}
 	
+	// Note: This only returns intersections in the direction of the ray
+	// I.e. a camera looking *away* from the plane won't see the plane as if it were in front of the camera
 	public Vector3D getIntersection(Ray ray) {
-		if(this.normal.dot(ray.getDirection()) == 0) {
-			if(this.contains(ray.getOrigin())) {
-				return ray.getOrigin();
-			}
-
-			return null;
-		}
-		
-		double t = 0.0;
-		
-		double d = this.refPoint.dot(this.normal.neg());
-		double constant = ray.getOrigin().mul(this.normal).componentSum();
-		double coefficient = ray.getDirection().mul(this.normal).componentSum();
-		
-		t = -(d + constant) / coefficient;
-		
-		return ray.getParametricPoint(t);
-	}
-	
-	public Vector3D getIntersectionPositive(Ray ray) {
 		if(this.normal.dot(ray.getDirection()) == 0) {
 			if(this.contains(ray.getOrigin())) {
 				return ray.getOrigin();
