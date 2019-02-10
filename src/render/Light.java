@@ -1,7 +1,6 @@
 package render;
 
 import maths.Vector3D;
-import java.awt.Color;
 
 public class Light {
 
@@ -41,13 +40,5 @@ public class Light {
 		
 		double distance = this.origin.sub(point).length();
 		return Math.min((1 - (Math.min(distance, this.radius) / this.radius)) * this.intensity, 1);
-	}
-	
-	// Computes the pixel color of a point based on distance to the light source
-	// Doesn't care about occlusion
-	public Color computeColor(Vector3D point) {
-		float colorIntensity = (float)computeColorIntensity(point);
-		
-		return new Color(colorIntensity, colorIntensity, colorIntensity);
 	}
 }
