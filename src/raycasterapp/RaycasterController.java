@@ -315,6 +315,17 @@ public class RaycasterController {
         	}
         };
         
+        // Same as above for positive numbers only
+        Pattern validInputPatternPositive = Pattern.compile("(([1-9][0-9]*)|0)?(\\.[0-9]*)?");
+        UnaryOperator<TextFormatter.Change> filterPositive = c -> {
+        	String text = c.getControlNewText();
+        	if(validInputPatternPositive.matcher(text).matches()) {
+        		return c;
+        	}else {
+        		return null;
+        	}
+        };
+        
         // Make a converter that converts text entries into double values
         StringConverter<Double> converter = new StringConverter<Double>() {
             @Override
@@ -332,16 +343,16 @@ public class RaycasterController {
             }
         };
         
-        // Make a text formatters and apply them to all the text fields
+        // Make text formatters and apply them to all the text fields
         addLightX.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addLightY.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addLightZ.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
-        addLightRadius.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
-        addLightIntensity.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
+        addLightRadius.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filterPositive));
+        addLightIntensity.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filterPositive));
         addSphereX.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addSphereY.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addSphereZ.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
-        addSphereRadius.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
+        addSphereRadius.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filterPositive));
         addPlaneX.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addPlaneY.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addPlaneZ.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
