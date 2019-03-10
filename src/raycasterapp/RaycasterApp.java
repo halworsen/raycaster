@@ -8,9 +8,15 @@ import javafx.stage.Stage;
 public class RaycasterApp extends Application{
 	@Override
 	public void start(final Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Raycaster");
+		primaryStage.setTitle("Raycaster - New Scene");
 		primaryStage.setResizable(false);
-		primaryStage.setScene(new Scene(FXMLLoader.load(RaycasterApp.class.getResource("RaycasterApp.fxml"))));
+		FXMLLoader loader = new FXMLLoader(RaycasterApp.class.getResource("RaycasterApp.fxml"));
+		Scene scene = new Scene(loader.load());
+		
+		RaycasterController controller = loader.getController();
+		controller.setStage(primaryStage);
+		
+		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 

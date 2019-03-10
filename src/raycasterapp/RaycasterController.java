@@ -6,15 +6,23 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 import javafx.fxml.FXML;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import data.DataHandleSuccessType;
+import data.DataManager;
 
 import maths.Plane;
 import maths.Sphere;
@@ -34,6 +42,27 @@ public class RaycasterController {
     @FXML
     private URL location;
 
+    @FXML
+    private MenuItem newSceneItem;
+
+    @FXML
+    private MenuItem openItem;
+
+    @FXML
+    private MenuItem saveItem;
+
+    @FXML
+    private MenuItem saveAsItem;
+
+    @FXML
+    private MenuItem quitItem;
+
+    @FXML
+    private MenuItem clearSceneItem;
+
+    @FXML
+    private MenuItem resetCamItem;
+    
     @FXML
     private Canvas renderCanvas;
 
@@ -126,6 +155,8 @@ public class RaycasterController {
 
     @FXML
     private Button addPlaneButton;
+    private Stage stage;
+    private DataManager dataManager;
 
 	private Camera cam;
 	private RenderScene renderScene;
@@ -133,6 +164,108 @@ public class RaycasterController {
 	
 	private int canvasWidth;
 	private int canvasHeight;
+	
+    private boolean unsavedChanges = false;
+	
+    @FXML
+    void onQuitClicked(ActionEvent event) {
+    	if(unsavedChanges) {
+    		Alert alert = new Alert(AlertType.CONFIRMATION, "You have unsaved changes. Are you sure you want to quit?", ButtonType.YES, ButtonType.NO);
+    		alert.showAndWait();
+    		
+    		if(alert.getResult() == ButtonType.NO) {
+    			return;
+    		}
+    	}
+    	
+    	Platform.exit();
+    }
+	
+    @FXML
+    void clearScene(ActionEvent event) {
+    	renderScene.clear();
+    	
+    	unsavedChanges = true;
+		updateTitle();
+    	updateCanvas();
+    }
+    
+    @FXML
+    void resetCamera(ActionEvent event) {
+    	cam.reset();
+    	cam.setOrigin(new Vector3D(-10, 0, 0));
+    	
+    	updateCanvas();
+    }
+    
+    @FXML
+    void createNewScene(ActionEvent event) {
+    	if(unsavedChanges) {
+    		Alert alert = new Alert(AlertType.CONFIRMATION, "You have unsaved changes. Are you sure you want to create a new scene?", ButtonType.YES, ButtonType.NO);
+    		alert.showAndWait();
+    		
+    		if(alert.getResult() == ButtonType.NO) {
+    			return;
+    		}
+    	}
+    	
+    	renderScene.clear();
+    	dataManager.resetCurrentFile();
+    	unsavedChanges = false;
+    	updateTitle();
+    	
+    	updateCanvas();
+    }
+
+    @FXML
+    void openSavedScene(ActionEvent event) {
+    	if(unsavedChanges) {
+    		Alert alert = new Alert(AlertType.CONFIRMATION, "You have unsaved changes. Are you sure you want to open another scene?", ButtonType.YES, ButtonType.NO);
+    		alert.showAndWait();
+    		
+    		if(alert.getResult() == ButtonType.NO) {
+    			return;
+    		}
+    	}
+    	
+    	DataHandleSuccessType success = dataManager.load();
+    	
+    	if(success == DataHandleSuccessType.OK) {
+    		unsavedChanges = false;
+    		updateTitle();
+    	} else if(success == DataHandleSuccessType.FAIL) {
+    		Alert alert = new Alert(AlertType.ERROR, "An error occured while opening the selected scene", ButtonType.OK);
+    		alert.showAndWait();
+    	}
+    	
+    	updateCanvas();
+    }
+    
+    @FXML
+    void saveCurrentScene(ActionEvent event) {
+    	DataHandleSuccessType success = dataManager.save();
+    	
+    	if(success == DataHandleSuccessType.OK) {
+    		unsavedChanges = false;
+    		updateTitle();
+    	} else if(success == DataHandleSuccessType.FAIL) {
+    		Alert alert = new Alert(AlertType.ERROR, "An error occured while saving the scene", ButtonType.OK);
+    		alert.showAndWait();
+    	}
+    }
+
+    @FXML
+    void saveCurrentSceneAs(ActionEvent event) {
+    	DataHandleSuccessType success = dataManager.saveAs();
+    	
+    	if(success == DataHandleSuccessType.OK) {
+    		unsavedChanges = false;
+    		updateTitle();
+    	} else if(success == DataHandleSuccessType.FAIL) {
+    		Alert alert = new Alert(AlertType.ERROR, "An error occured while saving the scene", ButtonType.OK);
+    		alert.showAndWait();
+    	}
+    }
 	
     @FXML
     // -X
@@ -245,6 +378,8 @@ public class RaycasterController {
     	Light newLight = new Light(new Vector3D(x,y,z), radius, intensity);
     	renderScene.addLight(newLight);
     	
+    	unsavedChanges = true;
+		updateTitle();
     	updateCanvas();
     }
 
@@ -262,6 +397,8 @@ public class RaycasterController {
         Plane newPlane = new Plane(new Vector3D(nx,ny,nz), new Vector3D(x,y,z));
         renderScene.addGeoShape(newPlane);
         
+        unsavedChanges = true;
+		updateTitle();
         updateCanvas();
     }
 
@@ -277,7 +414,16 @@ public class RaycasterController {
         Sphere newSphere = new Sphere(new Vector3D(x,y,z), radius);
         renderScene.addGeoShape(newSphere);
         
+        unsavedChanges = true;
+		updateTitle();
         updateCanvas();
+    }
+    
+    void setStage(Stage stage) {
+    	if(this.stage != null) { return; }
+    	
+    	this.stage = stage;
+    	this.dataManager = new DataManager(stage, renderScene);
     }
     
     @FXML
@@ -369,17 +515,7 @@ public class RaycasterController {
     // Sets up the rendering scene, camera and renderer
     private void initCanvas() {
 		this.renderScene = new RenderScene();
-		/*
-		Vector3D nullVec = new Vector3D();
-		// add some objects to the scene
-		renderScene.addGeoShape(new Sphere(nullVec, 1));
-		renderScene.addGeoShape(new Plane(new Vector3D(1,0,0), nullVec));
-		// add a light
-		renderScene.addLight(new Light(new Vector3D(-1.5, 1.5, 2), 3, 1.5));
-		*/
-		
 		this.cam = new Camera(new Vector3D(-10, 0, 0), 60, 60);
-		
 		this.renderer = new RayCaster(cam, canvasWidth, canvasHeight);
 		
 		updateCanvas();
@@ -400,5 +536,14 @@ public class RaycasterController {
 				writer.setColor(x, y, colors[x][y]);
 			}
 		}
+    }
+    
+    public void updateTitle() {
+    	String sceneName = dataManager.getCurrentSceneName();
+    	if(sceneName.isEmpty()) {
+    		sceneName = "New Scene";
+    	}
+    	
+		stage.setTitle("Raycaster - " + (unsavedChanges ? "*" : "") + sceneName);
     }
 }

@@ -8,6 +8,8 @@ module raycaster {
 	requires javafx.fxml;
 	requires javafx.graphics;
 	requires java.desktop;
+	requires gson;
+	requires java.sql;
 	
 	exports maths;
 	exports render;

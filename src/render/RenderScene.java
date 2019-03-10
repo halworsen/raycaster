@@ -23,17 +23,11 @@ public class RenderScene {
 		shapes.add(shape);
 	}
 	
-	public GeoShape[] getShapes() {
-		GeoShape[] shapes = new GeoShape[this.shapes.size()];
-		shapes = this.shapes.toArray(shapes);
-		
+	public ArrayList<GeoShape> getShapes() {
 		return shapes;
 	}
 	
-	public Light[] getLights() {
-		Light[] lights = new Light[this.lights.size()];
-		lights = this.lights.toArray(lights);
-				
+	public ArrayList<Light> getLights() {
 		return lights;
 	}
 	
@@ -43,6 +37,11 @@ public class RenderScene {
 	
 	public int getLightCount() {
 		return this.lights.size();
+	}
+	
+	public void clear() {
+		this.lights.clear();
+		this.shapes.clear();
 	}
 	
 }
