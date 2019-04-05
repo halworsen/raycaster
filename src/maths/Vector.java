@@ -64,8 +64,10 @@ public class Vector {
 	}
 	
 	public void normalize() {
+		// NOTE: this is important! inserting length() directly into the loop gives the wrong result since the length will update after every step!
+		double length = length();
 		for(int i = 0; i < this.dim(); i++) {
-			this.coordinates[i] /= this.length();
+			this.coordinates[i] /= length;
 		}
 	}
 	
@@ -159,6 +161,10 @@ public class Vector {
 	}
 
 	public double dot(Vector vec) {
+		if(vec.dim() < dim()) {
+			throw new IllegalArgumentException("Attempt to perform undefined dot product operation");
+		}
+		
 		double result = 0;
 		
 		for(int i = 0; i < this.dim(); i++) {

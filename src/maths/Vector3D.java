@@ -45,14 +45,20 @@ public class Vector3D extends Vector {
 	}
 	
 	public Vector3D cross(Vector3D vec) {
-		Vector3D result3d = new Vector3D();
-		
+		/*
+		 * 		x  y  z
+		 *      a  b  c
+		 *      a' b' c'
+		 *
+		 * Compute cofactors to get:
+		 * x = bc' - cb'
+		 * y = -(ac' - ca')
+		 * z = ab' - ba'
+		 */
 		double x = (this.getY() * vec.getZ()) - (this.getZ() * vec.getY());
-		double y = (this.getX() * vec.getZ()) - (this.getZ() * vec.getX());
+		double y = -((this.getX() * vec.getZ()) - (this.getZ() * vec.getX()));
 		double z = (this.getX() * vec.getY()) - (this.getY() * vec.getX());
 		
-		result3d.setCoords(x, y, z);
-		
-		return result3d;
+		return new Vector3D(x, y, z);
 	}
 }

@@ -22,21 +22,21 @@ public class Sphere extends GeoShape {
 	}
 	
 	public Vector3D getIntersection(Ray ray) {
-		double projectionLength = ray.getDirection().dot(this.origin.sub(ray.getOrigin()));
-		Vector3D closestPoint = ray.getParametricPoint(projectionLength);
+		Vector3D toRayOrigin = new Vector3D(this.origin.sub(ray.getOrigin()));
+		double projectionLength = ray.getDirection().dot(toRayOrigin);
 		
-		double distToRay = closestPoint.sub(origin).length();
-		// no intersection
-		if(distToRay > radius) {
+		if(projectionLength < 0) {
 			return null;
 		}
 		
-		// ray is tangent to the sphere
-		if(distToRay == radius) {
-			return closestPoint;
+		double distToRaySq = toRayOrigin.dot(toRayOrigin) - Math.pow(projectionLength, 2);
+		
+		// no intersection
+		if(distToRaySq < 0 || distToRaySq > radius*radius) {
+			return null;
 		}
 		
-		double toIntersect = Math.sqrt(Math.pow(radius, 2) - Math.pow(distToRay, 2));
+		double toIntersect = Math.sqrt(Math.pow(radius, 2) - distToRaySq);
 		
 		return ray.getParametricPoint(projectionLength - toIntersect);
  	}

@@ -13,8 +13,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.application.Platform;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import maths.GeoShape;
 import maths.Plane;
 import maths.Sphere;
@@ -29,9 +32,16 @@ public class DataManager implements SaveInterface {
 	private String currentScenePath = "";
 	private String currentSceneName = "";
 	
-	public DataManager(Stage stage, RenderScene scene) {
-		this.stage = stage;
+	public DataManager(RenderScene scene) {
 		currentRenderScene = scene;
+	}
+	
+	public void setupStage() {
+		Platform.runLater(() -> {
+			stage = new Stage();
+			stage.initModality(Modality.NONE);
+			stage.initStyle(StageStyle.UTILITY);
+		});
 	}
 	
 	public void setCurrentScene(RenderScene scene) {
@@ -87,7 +97,6 @@ public class DataManager implements SaveInterface {
 				
 				return false;
 			}
-
 			
 			// Legg til alle objektene til scenen
 			currentRenderScene.clear();
@@ -111,8 +120,6 @@ public class DataManager implements SaveInterface {
 			
 			return true;
 		} catch (FileNotFoundException e) {
-			System.out.println("Couldn't load scene from path: " + path);
-			
 			return false;
 		}
 	}
@@ -159,8 +166,6 @@ public class DataManager implements SaveInterface {
 			
 			return true;
 		} catch (FileNotFoundException e) {
-			System.out.println("Couldn't save to the given path: " + path);
-
 			return false;
 		}
 	}
@@ -176,6 +181,11 @@ public class DataManager implements SaveInterface {
 	}
 	
 	public DataHandleSuccessType load() {
+		if(stage == null)
+		{
+			throw new IllegalStateException("load was called but the stage was never set up!");
+		}
+		
 		FileChooser fileDialog = new FileChooser();
 		fileDialog.setTitle("Open scene");
 		fileDialog.getExtensionFilters().addAll(
@@ -208,6 +218,11 @@ public class DataManager implements SaveInterface {
 	}
 	
 	public DataHandleSuccessType saveAs() {
+		if(stage == null)
+		{
+			throw new IllegalStateException("saveAs was called but the stage was never set up!");
+		}
+		
 		FileChooser fileDialog = new FileChooser();
 		fileDialog.setTitle("Save scene");
 		fileDialog.getExtensionFilters().addAll(

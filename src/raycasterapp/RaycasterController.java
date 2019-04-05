@@ -270,7 +270,7 @@ public class RaycasterController {
     @FXML
     // -X
     void translateNXPress() {
-    	this.cam.translate(new Vector3D(-0.5, 0, 0));
+    	cam.translate(new Vector3D(-0.5, 0, 0));
     	
     	updateCanvas();
     }
@@ -279,7 +279,7 @@ public class RaycasterController {
     // -Y
     // Note: Y controls are inverted
     void translateNYPress() {
-    	this.cam.translate(new Vector3D(0, 0.5, 0));
+    	cam.translate(new Vector3D(0, 0.5, 0));
     	
     	updateCanvas();
     }
@@ -287,7 +287,7 @@ public class RaycasterController {
     @FXML
     // -Z
     void translateNZPress() {
-    	this.cam.translate(new Vector3D(0, 0, -0.5));
+    	cam.translate(new Vector3D(0, 0, -0.5));
     	
     	updateCanvas();
     }
@@ -295,7 +295,7 @@ public class RaycasterController {
     @FXML
     // +X
     void translatePXPress() {
-    	this.cam.translate(new Vector3D(0.5, 0, 0));
+    	cam.translate(new Vector3D(0.5, 0, 0));
     	
     	updateCanvas();
     }
@@ -303,7 +303,7 @@ public class RaycasterController {
     @FXML
     // +Y
     void translatePYPress() {
-    	this.cam.translate(new Vector3D(0, -0.5, 0));
+    	cam.translate(new Vector3D(0, -0.5, 0));
     	
     	updateCanvas();
     }
@@ -311,7 +311,7 @@ public class RaycasterController {
     @FXML
     // +Z
     void translatePZPress() {
-    	this.cam.translate(new Vector3D(0, 0, 0.5));
+    	cam.translate(new Vector3D(0, 0, 0.5));
     	
     	updateCanvas();
     }
@@ -319,7 +319,7 @@ public class RaycasterController {
     @FXML
     // -Pitch
     void rotateNPPress() {
-    	this.cam.rotateY(-Math.PI/40);
+    	cam.rotateY(-Math.PI/40);
     	
     	updateCanvas();
     }
@@ -327,7 +327,7 @@ public class RaycasterController {
     @FXML
     // -Roll
     void rotateNRPress() {
-    	this.cam.rotateX(-Math.PI/40);
+    	cam.rotateX(-Math.PI/40);
     	
     	updateCanvas();
     }
@@ -336,7 +336,7 @@ public class RaycasterController {
     // -Yaw
     // Note: Yaw controls are inverted. Just felt more right that +yaw brings you right (no pun intended)
     void rotateNYPress() {
-    	this.cam.rotateZ(Math.PI/40);
+    	cam.rotateZ(Math.PI/40);
     	
     	updateCanvas();
     }
@@ -344,7 +344,7 @@ public class RaycasterController {
     @FXML
     // +Pitch
     void rotatePPPress() {
-    	this.cam.rotateY(Math.PI/40);
+    	cam.rotateY(Math.PI/40);
     	
     	updateCanvas();
     }
@@ -352,7 +352,7 @@ public class RaycasterController {
     @FXML
     // +Roll
     void rotatePRPress() {
-    	this.cam.rotateX(Math.PI/40);
+    	cam.rotateX(Math.PI/40);
     	
     	updateCanvas();
     }
@@ -360,7 +360,7 @@ public class RaycasterController {
     @FXML
     // +Yaw
     void rotatePYPress() {
-    	this.cam.rotateZ(-Math.PI/40);
+    	cam.rotateZ(-Math.PI/40);
     	
     	updateCanvas();
     }
@@ -421,9 +421,7 @@ public class RaycasterController {
     
     void setStage(Stage stage) {
     	if(this.stage != null) { return; }
-    	
     	this.stage = stage;
-    	this.dataManager = new DataManager(stage, renderScene);
     }
     
     @FXML
@@ -506,25 +504,32 @@ public class RaycasterController {
         addPlaneNY.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         addPlaneNZ.setTextFormatter(new TextFormatter<Double>(converter, 0.0, filter));
         
-		this.canvasWidth = (int)renderCanvas.getWidth();
-		this.canvasHeight = (int)renderCanvas.getHeight();
+		canvasWidth = (int)renderCanvas.getWidth();
+		canvasHeight = (int)renderCanvas.getHeight();
         
         initCanvas();
     }
     
+    // Initializes the data manager
+    private void initDataManager() {
+        dataManager = new DataManager(renderScene);
+        dataManager.setupStage();
+    }
+    
     // Sets up the rendering scene, camera and renderer
     private void initCanvas() {
-		this.renderScene = new RenderScene();
-		this.cam = new Camera(new Vector3D(-10, 0, 0), 60, 60);
-		this.renderer = new RayCaster(cam, canvasWidth, canvasHeight);
+		renderScene = new RenderScene();
+		cam = new Camera(new Vector3D(-10, 0, 0), 60, 60);
+		renderer = new RayCaster(cam, canvasWidth, canvasHeight);
 		
+		initDataManager();
 		updateCanvas();
     }
     
     // Updates the canvas by rendering the scene
     private void updateCanvas() {
 		// render the scene
-		Color[][] colors = renderer.getColors(this.renderScene);
+		Color[][] colors = renderer.getColors(renderScene);
 
 		PixelWriter writer = renderCanvas.getGraphicsContext2D().getPixelWriter();
 		for(int x = 0; x < canvasWidth; x++) {

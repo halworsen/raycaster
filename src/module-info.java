@@ -8,6 +8,7 @@ module raycaster {
 	requires javafx.fxml;
 	requires javafx.graphics;
 	requires java.desktop;
+	requires junit;
 	requires gson;
 	requires java.sql;
 	
